@@ -1,0 +1,3 @@
+system.resolution= auto
+game.gb.emulator= auto
+game.gba.emulator= auto
