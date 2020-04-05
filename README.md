@@ -1,8 +1,8 @@
 # GameBoy Console
 The GameBoy Console is an emulator that plays physical GameBoy, GameBoy Color and GameBoy Advance cartridges on your TV! The goal of this project is to provide an inexpensive solution for revisiting beloved GameBoy games on the big screen and help preserve cartridge save data.
 
-## Installation
-Please follow these steps to install and setup the GameBoy Console on a Raspberry Pi Zero or Raspberry Pi Zero W (other Raspberry Pi versions not yet supported). You will need the appropriate hardware connected to the GPIO of the Raspberry Pi in order to read cartridges. Refer to the hardware guide here for setting up the hardware.
+## Software Setup
+Please follow these steps to install and setup the GameBoy Console on a Raspberry Pi Zero or Raspberry Pi Zero W (other Raspberry Pi versions not yet supported). You will need the appropriate hardware connected to the GPIO of the Raspberry Pi in order to read cartridges. Refer to the additional documentation [here](https://github.com/pixelcircuits/GBConsole_Hardware) for information on setting up the hardware.
 
 ### 1. Install and Setup Raspbian Lite
 a) The first thing to do is start with a fresh SD card with [Raspbian Lite](https://www.raspberrypi.org/downloads/raspbian/) loaded. Refer to [this tutorial](https://www.raspberrypi.org/documentation/installation/installing-images/README.md) for getting Raspbian up and running (last known working version is 2020-02-13)
