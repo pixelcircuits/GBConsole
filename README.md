@@ -72,3 +72,31 @@ unzip master.zip
 mv /home/pi/Nintendo_-_Game_Boy_Advance-master /home/pi/libretro/gba
 rm master.zip
 ```
+
+### 5. Troubleshooting
+If you find yourself having issues with any of the emulator cores you can install them from a previously known working binary. Run the following commands for the problem cores.
+##### lr-mgba
+```
+wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Hardware/master/bin/lr-mgba.zip
+unzip lr-mgba.zip -d /home/pi/lr-mgba
+sudo rm -r /opt/retropie/libretrocores/lr-mgba
+sudo mv /home/pi/lr-mgba /opt/retropie/libretrocores/lr-mgba
+rm /home/pi/lr-mgba.zip
+```
+##### lr-gpsp
+```
+wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Hardware/master/bin/lr-gpsp.zip
+unzip lr-gpsp.zip -d /home/pi/lr-gpsp
+sudo rm -r /opt/retropie/libretrocores/lr-gpsp
+sudo mv /home/pi/lr-gpsp /opt/retropie/libretrocores/lr-gpsp
+rm /home/pi/lr-gpsp.zip
+```
+##### lr-gambatte
+```
+wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Hardware/master/bin/lr-gambatte.zip
+unzip lr-gambatte.zip -d /home/pi/lr-gambatte
+sudo rm -r /opt/retropie/libretrocores/lr-gambatte
+sudo mv /home/pi/lr-gambatte /opt/retropie/libretrocores/lr-gambatte
+rm /home/pi/lr-gambatte.zip
+```
+
