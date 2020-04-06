@@ -47,7 +47,7 @@ void vid_compositeColorToTexture(VidTexture* t, unsigned char r, unsigned char g
 void vid_clearTexture(VidTexture* t);
 
 // Flushes the video buffer to the screen
-int vid_flush();
+void vid_flush();
 
 // Clears any cached elements (must reinitialize)
 int vid_clear();

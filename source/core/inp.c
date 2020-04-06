@@ -74,6 +74,7 @@ void* inp_thread_statePolling(void* args)
 		ts.tv_nsec = (DEVICE_UPDATE_MILLIS % 1000) * 1000000;
 		nanosleep(&ts, &ts);
 	}
+	return 0;
 }
 
 // Setup and initialize the Controller interface
@@ -282,8 +283,10 @@ static int inp_addDeviceToList(char* path) {
 			inp_deviceName[inp_deviceSize] = (char*)malloc((strlen(path)+1)*sizeof(char));
 			strcpy(inp_deviceName[inp_deviceSize], path);
 			inp_deviceSize++;
+			return inp_deviceSize-1;
 		}
 	}
+	return -1;
 }
 static int inp_getDeviceFromList(char* path) {
 	int i;

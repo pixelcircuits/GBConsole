@@ -185,6 +185,7 @@ void bt_startPairTrustConnect(const char* name)
 			bt_ptcThreadId = -1;
 		}
 	}
+	return 0;
 }
 
 // Checks on the background pair, trust and connect process

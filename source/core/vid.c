@@ -255,7 +255,7 @@ void vid_clearTexture(VidTexture* t)
 }
 
 // Flushes the video buffer to the screen
-int vid_flush()
+void vid_flush()
 {
 	if(vid_scrMain) {
 		SDL_Flip(vid_scrMain);

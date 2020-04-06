@@ -42,7 +42,7 @@ sudo ./retropie_setup.sh
 a) Run the following commands to install dependencies, download the source code and build the GameBoy Console
 ```
 cd /home/pi
-sudo apt-get install libsdl1.2-dev libsdl-image1.2-dev libsdl-gfx1.2-dev libsdl-ttf2.0-dev libssl-dev
+sudo apt-get install -y libsdl1.2-dev libsdl-image1.2-dev libsdl-gfx1.2-dev libsdl-ttf2.0-dev libssl-dev
 git clone https://github.com/pixelcircuits/GBConsole.git
 cd GBConsole
 make

@@ -73,6 +73,7 @@ void* wgc_thread_statePolling(void* args)
 			wgc_sleep(100*1000);
 		}
 	}
+	return 0;
 }
 
 // Setup and initialize the Controller interface
