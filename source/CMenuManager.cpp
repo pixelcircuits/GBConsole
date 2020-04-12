@@ -70,7 +70,7 @@ void CMenuManager::loadSceneAssets()
 		modalButtonText[i] = smgr->addTextSceneNode(0, COLOR_OFFWHITE, COLOR_GRAY, 24, false);
 	}
 	
-	title = smgr->addTextSceneNode("GameBoy Console", COLOR_WHITE, COLOR_DARKGRAY, 38, true);
+	title = smgr->addImageSceneNode("data/img/title.png", Vector(356,60), false, false);
 	title->setPosition(Vector(screenMargin,screenMargin));
 	subtitle = smgr->addTextSceneNode(0, COLOR_OFFWHITE, COLOR_DARKGRAY, 36, false);
 	subtitle->setPosition(title->getPosition()+Vector(0,title->getSize().Y));
@@ -1180,5 +1180,4 @@ static void* mm_processProgressBar(void* args)
 		vid_drawBox(posX, posY, width, sizeY, c.Red, c.Green, c.Blue, 255);
 		vid_flush();
 	}
-	return 0;
 }

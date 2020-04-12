@@ -136,7 +136,7 @@ private:
 	CTextSceneNode* modalText[2];
 	CRectSceneNode* modalButton[MENU_MAX_MODAL_BUTTONS];
 	CTextSceneNode* modalButtonText[MENU_MAX_MODAL_BUTTONS];
-	CTextSceneNode* title;
+	CImageSceneNode* title;
 	CTextSceneNode* subtitle;
 	CTextSceneNode* infotext;
 	CImageSceneNode* cartButton;

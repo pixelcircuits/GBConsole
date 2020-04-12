@@ -13,7 +13,7 @@
 #define COLOR_WHITE Color(245,245,245)
 #define COLOR_OFFWHITE Color(230,230,230)
 #define COLOR_LIGHTBLUE Color(109,186,241)
-#define COLOR_LIGHTORANGE Color(243,116,111)
+#define COLOR_LIGHTORANGE Color(243,166,111)
 #define COLOR_ACCENT Color(83,183,209)
 
 //! Class that handles color math

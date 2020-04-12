@@ -21,6 +21,9 @@ int vid_getTextureWidth(VidTexture* t);
 // Gets the given textures height
 int vid_getTextureHeight(VidTexture* t);
 
+// Saves the current screen as a bitmap
+void vid_saveScreen(const char* file);
+
 // Draws a box to the video buffer
 void vid_drawBox(int x, int y, int w, int h, unsigned char r, unsigned char g, unsigned char b, unsigned char opaque);
 

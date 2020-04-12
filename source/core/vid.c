@@ -105,6 +105,14 @@ int vid_getTextureHeight(VidTexture* t)
 	return 0;
 }
 
+// Saves the current screen as a bitmap
+void vid_saveScreen(const char* file)
+{
+	if(vid_scrMain && file) {
+		SDL_SaveBMP(vid_scrMain, file);
+	}
+}
+
 // Checks if the Video interface is initialized
 char vid_isInit()
 {
