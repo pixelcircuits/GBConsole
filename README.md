@@ -1,6 +1,8 @@
 # GameBoy Console
 The GameBoy Console is an emulator that plays physical GameBoy, GameBoy Color and GameBoy Advance cartridges on your TV! The goal of this project is to provide an inexpensive solution for revisiting beloved GameBoy games on the big screen and help preserve cartridge save data.
 
+<img src="https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/guide/img/gbconsole_img2.jpg" width="400" hspace="4"/><img src="https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/guide/img/gbconsole_dev2.jpg" width="400" hspace="4"/><img src="https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/guide/img/screen_cartridge.png" width="400" hspace="4"/><img src="https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/guide/img/screen_catalog.png" width="400" hspace="4"/>
+
 ## Software Setup
 Please follow these steps to install and setup the GameBoy Console on a Raspberry Pi Zero or Raspberry Pi Zero W (other Raspberry Pi versions not yet supported). You will need the appropriate hardware connected to the GPIO of the Raspberry Pi in order to read cartridges. Refer to the additional documentation [here](https://github.com/pixelcircuits/GBConsole_Hardware) for information on setting up the hardware.
 
@@ -77,7 +79,7 @@ rm master.zip
 If you find yourself having issues with any of the emulator cores you can install them from a previously known working binary. Run the following commands for the problem cores.
 ##### lr-mgba
 ```
-wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Hardware/master/bin/lr-mgba.zip
+wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/bin/lr-mgba.zip
 unzip lr-mgba.zip -d /home/pi/lr-mgba
 sudo rm -r /opt/retropie/libretrocores/lr-mgba
 sudo mv /home/pi/lr-mgba /opt/retropie/libretrocores/lr-mgba
@@ -85,7 +87,7 @@ rm /home/pi/lr-mgba.zip
 ```
 ##### lr-gpsp
 ```
-wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Hardware/master/bin/lr-gpsp.zip
+wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/bin/lr-gpsp.zip
 unzip lr-gpsp.zip -d /home/pi/lr-gpsp
 sudo rm -r /opt/retropie/libretrocores/lr-gpsp
 sudo mv /home/pi/lr-gpsp /opt/retropie/libretrocores/lr-gpsp
@@ -93,7 +95,7 @@ rm /home/pi/lr-gpsp.zip
 ```
 ##### lr-gambatte
 ```
-wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Hardware/master/bin/lr-gambatte.zip
+wget https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/bin/lr-gambatte.zip
 unzip lr-gambatte.zip -d /home/pi/lr-gambatte
 sudo rm -r /opt/retropie/libretrocores/lr-gambatte
 sudo mv /home/pi/lr-gambatte /opt/retropie/libretrocores/lr-gambatte
