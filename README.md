@@ -57,7 +57,7 @@ sudo nano /etc/rc.local
 ```
 
 ### 4. Download Box Art and Screen Captures
-a) Run the following commands to download box art and screen captures from the libretro repository used to enhance the the UI (be patient, this will take a while...)
+a) Run the following commands to download box art and screen captures from the libretro repository used to enhance the UI (be patient, this will take a while...)
 ```
 cd /home/pi
 mkdir libretro
