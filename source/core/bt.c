@@ -30,7 +30,7 @@ static char bluetoohctl_open();
 static void bluetoohctl_close();
 
 // Pair, trust and connect process
-void* bt_thread_ptcStatePolling(void* args);
+static void* bt_thread_ptcStatePolling(void* args);
 static const char* bt_ptcName = 0;
 static char bt_ptcState = BT_PTC_NOT_STARTED;
 static pthread_t bt_ptcThreadId = -1;
@@ -185,7 +185,6 @@ void bt_startPairTrustConnect(const char* name)
 			bt_ptcThreadId = -1;
 		}
 	}
-	return 0;
 }
 
 // Checks on the background pair, trust and connect process
@@ -269,7 +268,7 @@ static void bluetoohctl_close() {
 }
 
 // Pair, trust and connect process
-void* bt_thread_ptcStatePolling(void* args)
+static void* bt_thread_ptcStatePolling(void* args)
 {
 	bt_ptcState = BT_PTC_SEARCHING;
 	bt_scanOn();
@@ -293,6 +292,7 @@ void* bt_thread_ptcStatePolling(void* args)
 		}
 	}
 	bt_scanOff();
+	return 0;
 }
 
 // Updater thread

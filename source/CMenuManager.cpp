@@ -1180,4 +1180,5 @@ static void* mm_processProgressBar(void* args)
 		vid_drawBox(posX, posY, width, sizeY, c.Red, c.Green, c.Blue, 255);
 		vid_flush();
 	}
+	return 0;
 }
