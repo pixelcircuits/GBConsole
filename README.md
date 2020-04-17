@@ -20,7 +20,7 @@ sudo raspi-config
 c) Reboot the Raspberry Pi and run the following commands to make sure the package manager is up to date
 ```
 sudo apt-get update
-sudo apt-get dist-upgrade
+sudo apt-get dist-upgrade -y
 sudo apt-get install -y git
 ```
 
