@@ -49,7 +49,7 @@ git clone https://github.com/pixelcircuits/GBConsole.git
 cd GBConsole
 make
 ```
-b) To have the application run on boot add the following lines to rc.local by running the nano text editor (press ctrl+x to exit and make sure to save)
+b) To have the application run on boot add the following lines before the exit line to rc.local by running the nano text editor (press ctrl+x to exit and make sure to save)
 ```
 sudo nano /etc/rc.local
 	cd GBConsole
