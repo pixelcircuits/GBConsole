@@ -40,6 +40,8 @@
 #define EIGHTBITDO_BTN_LR 16
 #define EIGHTBITDO_BTN_LR_LEFT -1
 #define EIGHTBITDO_BTN_LR_RIGHT 1
+#define EIGHTBITDO_AXIS_UD 1
+#define EIGHTBITDO_AXIS_LR 0
 
 // Data
 static char inp_isInitFlag = 0;
@@ -242,6 +244,7 @@ static void inp_checkButtonInput() {
 					}
 					inp_automateKeyboardHotkey(evp->code, evp->value);
 				} else if(evp->type == 3) {
+					//DPad
 					if(evp->code == EIGHTBITDO_BTN_UD) {
 						if(evp->value == EIGHTBITDO_BTN_UD_UP) inp_keyPresses[TRACK_KEY_PRESS_UP]++;
 						if(evp->value == EIGHTBITDO_BTN_UD_DOWN) inp_keyPresses[TRACK_KEY_PRESS_DOWN]++;
@@ -261,11 +264,32 @@ static void inp_checkButtonInput() {
 						if(inp_keyPresses[TRACK_KEY_PRESS_RIGHT] < 0) inp_keyPresses[TRACK_KEY_PRESS_RIGHT] = 0;
 						if(inp_keyPresses[TRACK_KEY_PRESS_LEFT] < 0) inp_keyPresses[TRACK_KEY_PRESS_LEFT] = 0;
 					}
+					
+					//Joystick
+					else if(evp->code == EIGHTBITDO_AXIS_UD) {
+						if(evp->value == 0) inp_keyPresses[TRACK_KEY_PRESS_UP]++;
+						if(evp->value == 255) inp_keyPresses[TRACK_KEY_PRESS_DOWN]++;
+						if(evp->value == 127 || evp->value == 128) {
+							inp_keyPresses[TRACK_KEY_PRESS_UP]--;
+							inp_keyPresses[TRACK_KEY_PRESS_DOWN]--;
+						}
+						if(inp_keyPresses[TRACK_KEY_PRESS_DOWN] < 0) inp_keyPresses[TRACK_KEY_PRESS_DOWN] = 0;
+						if(inp_keyPresses[TRACK_KEY_PRESS_UP] < 0) inp_keyPresses[TRACK_KEY_PRESS_UP] = 0;
+					} else if(evp->code == EIGHTBITDO_AXIS_LR) {
+						if(evp->value == 0) inp_keyPresses[TRACK_KEY_PRESS_LEFT]++;
+						if(evp->value == 255) inp_keyPresses[TRACK_KEY_PRESS_RIGHT]++;
+						if(evp->value == 127 || evp->value == 128) {
+							inp_keyPresses[TRACK_KEY_PRESS_LEFT]--;
+							inp_keyPresses[TRACK_KEY_PRESS_RIGHT]--;
+						}
+						if(inp_keyPresses[TRACK_KEY_PRESS_RIGHT] < 0) inp_keyPresses[TRACK_KEY_PRESS_RIGHT] = 0;
+						if(inp_keyPresses[TRACK_KEY_PRESS_LEFT] < 0) inp_keyPresses[TRACK_KEY_PRESS_LEFT] = 0;
+					}
 				}
 				
 				//determine input device type
 				if((evp->type == 1 && (evp->code == EIGHTBITDO_BTN_A || evp->code == EIGHTBITDO_BTN_B || evp->code == EIGHTBITDO_BTN_SL || evp->code == EIGHTBITDO_BTN_ST || evp->code == EIGHTBITDO_BTN_L1 || evp->code == EIGHTBITDO_BTN_R1))
-						|| (evp->type == 3 && (evp->code == EIGHTBITDO_BTN_UD || evp->code == EIGHTBITDO_BTN_LR))) {
+						|| (evp->type == 3 && (evp->code == EIGHTBITDO_BTN_UD || evp->code == EIGHTBITDO_BTN_LR || evp->code == EIGHTBITDO_AXIS_UD || evp->code == EIGHTBITDO_AXIS_LR))) {
 					inp_inputType = INP_TYPE_JOYSTICK;
 				} else if(evp->type == 1 && (evp->code == KEY_RIGHTSHIFT || evp->code == KEY_ENTER || evp->code == KEY_UP || evp->code == KEY_DOWN || evp->code == KEY_LEFT || evp->code == KEY_RIGHT
 						|| evp->code == KEY_Z || evp->code == KEY_X || evp->code == KEY_Q || evp->code == KEY_W || evp->code == KEY_ESC)) {
