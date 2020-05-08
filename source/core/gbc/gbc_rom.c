@@ -23,9 +23,8 @@ void gbc_rom_readAt(char* buffer, unsigned int start, unsigned int length)
 	gbc_cart_powerUp();
 	egpio_setPortDir(EX_GPIO_PORTC, 0xFF);
 	
-	//pull GBC_SPI_RD pin (and CSRAM if appropriate) low while we read data
+	//pull GBC_SPI_RD pin low while we read data
 	spi_setSelectPin(GBC_SPI_RD, 0x00);
-	if(start >= GBC_32K) egpio_writePort(EX_GPIO_PORTD, INV(GBC_CSRAM | GBC_PWR));
 	
 	//read ROM data
 	for(i = 0; i < length; i++) {
@@ -35,7 +34,17 @@ void gbc_rom_readAt(char* buffer, unsigned int start, unsigned int length)
 		char addr1 = (char) ((start + i) >> 8);
 		if(i==0 || addr0 == 0) egpio_writePortAB(addr0, addr1);
 		else egpio_writePort(EX_GPIO_PORTA, addr0);
+		
+		//pulse cs on each read for ram
+		if(start >= GBC_32K) {
+			egpio_writePort(EX_GPIO_PORTD, INV(GBC_CSRAM | GBC_PWR));
+			gbc_cart_delay(20);
+		}
+		
 		buffer[i] = egpio_readPort(EX_GPIO_PORTC);
+		
+		//cs high again
+		if(start >= GBC_32K) egpio_writePort(EX_GPIO_PORTD, INV(GBC_PWR));
 	}
 	
 	//pull RD and CSRAM back to high
@@ -56,9 +65,6 @@ void gbc_rom_writeAt(char* buffer, unsigned int start, unsigned int length)
 	//ensure default state
 	gbc_cart_powerUp();
 	
-	//pull CSRAM pin low while we write data
-	egpio_writePort(EX_GPIO_PORTD, INV(GBC_CSRAM | GBC_PWR));
-	
 	//write RAM data
 	for(i = 0; i < length; i++) {
 		
@@ -69,9 +75,10 @@ void gbc_rom_writeAt(char* buffer, unsigned int start, unsigned int length)
 		else egpio_writePort(EX_GPIO_PORTA, addr0);
 		egpio_writePort(EX_GPIO_PORTC, buffer[i]);
 		
-		//toggle the WR line
+		//toggle the WR and CS line
 		egpio_writePort(EX_GPIO_PORTD, INV(GBC_CSRAM | GBC_WR | GBC_PWR));
-		egpio_writePort(EX_GPIO_PORTD, INV(GBC_CSRAM | GBC_PWR));
+		gbc_cart_delay(20);
+		egpio_writePort(EX_GPIO_PORTD, INV(GBC_PWR));
 	}
 	
 	//pull WR and CSRAM back to high
