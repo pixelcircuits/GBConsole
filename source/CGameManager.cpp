@@ -415,7 +415,6 @@ int CGameManager::syncCartridgeEstimateTime(bool updateCartSave)
 		}
 	}
 	
-	time -= 1300;
 	if(time < 0) time = 0;
 	return time;
 }

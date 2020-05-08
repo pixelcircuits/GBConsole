@@ -173,7 +173,7 @@ unsigned int gbx_timeToReadSave()
 		if(gba_getSaveType()==GBA_SAVE_TYPE_FLASH_1M) return 1449;
 		return 1500;
 	}
-	return ((gbc_getSaveSize()/100)*10937)/10000; //0.01093733
+	return ((gbc_getSaveSize()/100)*21314)/10000; //0.02131436
 }
 
 // Gets the estimated amount of time to write GBx cartridge Save (millis)
@@ -188,7 +188,7 @@ unsigned int gbx_timeToWriteSave()
 		if(gba_getSaveType()==GBA_SAVE_TYPE_FLASH_1M) return 16861;
 		return 15000;
 	}
-	return ((gbc_getSaveSize()/100)*22687)/10000; //0.022686915
+	return ((gbc_getSaveSize()/100)*22158)/10000; //0.02215844
 }
 
 // Read the ROM of the connected GBx cartridge
