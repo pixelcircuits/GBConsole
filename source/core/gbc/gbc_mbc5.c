@@ -19,8 +19,8 @@ unsigned int gbc_mbc5_readROM(char* buffer, unsigned int length)
 		//set bank
 		char bankNum0 = (char) i;
 		char bankNum1 = (char) (i >> 8);
-		gbc_rom_writeByte(bankNum0, 0x2000);
 		gbc_rom_writeByte(bankNum1, 0x3000);
+		gbc_rom_writeByte(bankNum0, 0x2000);
 		
 		//read more data
 		unsigned int index = i * GBC_16K;
@@ -28,8 +28,8 @@ unsigned int gbc_mbc5_readROM(char* buffer, unsigned int length)
 	}
 	
 	//set back to bank 1
-	gbc_rom_writeByte(0x01, 0x2000);
 	gbc_rom_writeByte(0x00, 0x3000);
+	gbc_rom_writeByte(0x01, 0x2000);
 	
 	return length;
 }
