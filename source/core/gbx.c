@@ -256,6 +256,29 @@ int gbx_writeSave(char* data)
 	return result;
 }
 
+// Checks the state of the cartridge detector switch
+char gbx_checkDetectorSwitch()
+{
+	char result = 0;
+	spi_obtainLock(GBX_SPI_KEY, 0);
+	
+	if(gbx_isGB()) result = 1;
+	
+	spi_unlock(GBX_SPI_KEY);
+	return result;
+}
+
+// Dumps the first 200 bytes of the connected GBx cartridge
+void gbx_dumpHeader(char* data)
+{
+	spi_obtainLock(GBX_SPI_KEY, 0);
+	
+	if(gbx_isGB()) gbc_dumpHeader(data);
+	else gba_dumpHeader(data);
+	
+	spi_unlock(GBX_SPI_KEY);
+}
+
 // Cleans up the GBx utils
 int gbx_close()
 {

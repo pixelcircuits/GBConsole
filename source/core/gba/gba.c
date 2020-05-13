@@ -244,6 +244,15 @@ int gba_writeSave(char* buffer, unsigned int length)
 	return length;
 }
 
+// Dumps the first 200 bytes of the connected GBA cartridge
+void gba_dumpHeader(char* data)
+{
+	gba_rom_readAt(data, 0x00, 200);
+	
+	//power down the cart slot
+	gba_cart_powerDown();
+}
+
 // Cleans up the GBA utils
 int gba_close()
 {

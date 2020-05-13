@@ -57,6 +57,9 @@ int gbc_readSave(char* buffer, unsigned int length);
 // Write the Save Data to a connected GB cartridge
 int gbc_writeSave(char* buffer, unsigned int length);
 
+// Dumps the first 200 bytes of the connected GB cartridge
+void gbc_dumpHeader(char* data);
+
 // Cleans up the GB utils
 int gbc_close();
 

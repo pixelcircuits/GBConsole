@@ -58,6 +58,12 @@ int gbx_readSave(char* data);
 // Write the Save Data to the connected GBx cartridge
 int gbx_writeSave(char* data);
 
+// Checks the state of the cartridge detector switch
+char gbx_checkDetectorSwitch();
+
+// Dumps the first 200 bytes of the connected GBx cartridge
+void gbx_dumpHeader(char* data);
+
 // Cleans up the GBx utils
 int gbx_close();
 
