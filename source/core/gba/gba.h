@@ -55,7 +55,7 @@ int gba_readSave(char* buffer, unsigned int length);
 // Write the Save Data to a connected GBA cartridge
 int gba_writeSave(char* buffer, unsigned int length);
 
-// Dumps the first 200 bytes of the connected GBA cartridge
+// Dumps the first 400 bytes of the connected GBA cartridge
 void gba_dumpHeader(char* data);
 
 // Cleans up the GBA utils

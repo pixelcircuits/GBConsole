@@ -335,10 +335,10 @@ int gbc_writeSave(char* buffer, unsigned int length)
 	return length;
 }
 
-// Dumps the first 200 bytes of the connected GB cartridge
+// Dumps the first 400 bytes of the connected GB cartridge
 void gbc_dumpHeader(char* data)
 {
-	gbc_rom_readAt(data, 0x00, 200);
+	gbc_rom_readAt(data, 0x00, 400);
 	
 	//power down the cart slot
 	gbc_cart_powerDown();

@@ -61,7 +61,7 @@ int gbx_writeSave(char* data);
 // Checks the state of the cartridge detector switch
 char gbx_checkDetectorSwitch();
 
-// Dumps the first 200 bytes of the connected GBx cartridge
+// Dumps the first 400 bytes of the connected GBx cartridge
 void gbx_dumpHeader(char* data);
 
 // Cleans up the GBx utils

@@ -268,7 +268,7 @@ char gbx_checkDetectorSwitch()
 	return result;
 }
 
-// Dumps the first 200 bytes of the connected GBx cartridge
+// Dumps the first 400 bytes of the connected GBx cartridge
 void gbx_dumpHeader(char* data)
 {
 	spi_obtainLock(GBX_SPI_KEY, 0);
