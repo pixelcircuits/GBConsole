@@ -108,20 +108,16 @@ char gbc_loadHeader()
 	gbc_rom_readAt(data, 0x00, 1024);
 	char* header = &(data[0x100]);
 	
-	//verify nintendo logo
-	char verified = 1;
-	for(i=0; i<48; i++) {
-		if(header[i + 4] != gbc_nintendoLogo[i]) {
-			verified = 0;
-			break;
-		}
-	} 
-	if(verified == 0) {
+	//verify header checksum
+	unsigned char chk=0;
+	for(i=0x34; i<0x4D; i++) chk = chk - header[i];
+	chk = chk - 0x19;
+	if(header[0x4D] != chk) {
 		//power down the cart slot
 		gbc_cart_powerDown();
 		gbc_clearData();
 		return gbc_loaded;
-	} 
+	}
 	
 	//extract general data from header
 	for(i = 0; i < 16; i++) gbc_gameTitle[i] = header[0x34 + i];
@@ -383,18 +379,14 @@ static char gbc_verifyLoaded() {
 	char header[80];
 	gbc_rom_readAt(header, 0x100, 80);
 	
-	//verify nintendo logo
-	char verified = 1;
-	for(i=0; i<48; i++) {
-		if(header[i + 4] != gbc_nintendoLogo[i]) {
-			verified = 0;
-			break;
-		}
-	} 
-	if(verified == 0) {
+	//verify header checksum
+	unsigned char chk=0;
+	for(i=0x34; i<0x4D; i++) chk = chk - header[i];
+	chk = chk - 0x19;
+	if(header[0x4D] != chk) {
 		gbc_clearData();
 		return gbc_loaded;
-	} 
+	}
 	
 	//extract general data from header
 	char temp_gameTitle[17];
@@ -414,6 +406,7 @@ static char gbc_verifyLoaded() {
 	gbc_cleanString(temp_gameTitle);
 	
 	//check that the game title and CGB flag match expected
+	char verified = 1;
 	for(i = 0; i < 16; i++) {
 		if(gbc_gameTitle[i] != temp_gameTitle[i]) {
 			verified = 0;

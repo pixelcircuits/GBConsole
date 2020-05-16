@@ -12,7 +12,8 @@
 //-Atmel flash read/write is untested
 
 // Constants
-static const char gba_nintendoLogo[] = { 0xEA, 0x24, 0xFF, 0xAE, 0x51, 0x69, 0x9A, 0xA2, 0x21, 0x3D, 0x84, 0x82, 0x0A, 
+static const char gba_nintendoLogo[] = { 
+	                        0x24, 0xFF, 0xAE, 0x51, 0x69, 0x9A, 0xA2, 0x21, 0x3D, 0x84, 0x82, 0x0A, 
 	0x84, 0xE4, 0x09, 0xAD, 0x11, 0x24, 0x8B, 0x98, 0xC0, 0x81, 0x7F, 0x21, 0xA3, 0x52, 0xBE, 0x19, 
 	0x93, 0x09, 0xCE, 0x20, 0x10, 0x46, 0x4A, 0x4A, 0xF8, 0x27, 0x31, 0xEC, 0x58, 0xC7, 0xE8, 0x33, 
 	0x82, 0xE3, 0xCE, 0xBF, 0x85, 0xF4, 0xDF, 0x94, 0xCE, 0x4B, 0x09, 0xC1, 0x94, 0x56, 0x8A, 0xC0, 
@@ -76,20 +77,16 @@ char gba_loadHeader()
 	char header[192];
 	gba_rom_readAt(header, 0x00, 192);
 	
-	//verify nintendo logo
-	char verified = 1;
-	for(i=0; i<157; i++) {
-		if(header[i + 3] != gba_nintendoLogo[i]) {
-			verified = 0;
-			break;
-		}
-	} 
-	if(verified == 0) {
+	//verify header checksum
+	unsigned char chk=0;
+	for(i=0xA0; i<0xBC; i++) chk = chk - header[i];
+	chk = chk - 0x19;
+	if(header[0xBD] != chk) {
 		//power down the cart slot
 		gba_cart_powerDown();
 		gba_clearData();
 		return gba_loaded;
-	} 
+	}
 	
 	//extract general data from header
 	for(i = 0; i < 12; i++) gba_gameTitle[i] = header[0xA0 + i];
@@ -271,20 +268,17 @@ static char gba_verifyLoaded() {
 	char header[192];
 	gba_rom_readAt(header, 0x00, 192);
 	
-	//verify nintendo logo
-	char verified = 1;
-	for(i=0; i<157; i++) {
-		if(header[i + 3] != gba_nintendoLogo[i]) {
-			verified = 0;
-			break;
-		}
-	} 
-	if(verified == 0) {
+	//verify header checksum
+	unsigned char chk=0;
+	for(i=0xA0; i<0xBC; i++) chk = chk - header[i];
+	chk = chk - 0x19;
+	if(header[0xBD] != chk) {
 		gba_clearData();
 		return gba_loaded;
 	}
 	
 	//check that the game title, code and maker code match expected
+	char verified = 1;
 	for(i = 0; i < 12; i++) {
 		if(gba_gameTitle[i] != header[0xA0 + i]) {
 			verified = 0;
