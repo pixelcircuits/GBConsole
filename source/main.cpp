@@ -141,6 +141,10 @@ int main(int argc, char** argv)
 				if(selection == 0) updateCartSave = true;
 				if(selection == 1) doSync = false;
 				
+			} else if(syncCheck == SYNC_CHECK_SAVE_NONE) {
+				menuManager->showModal("Cartridge Has No Save Data:", "nothing to sync", 0, 0, 0);
+				doSync = false;
+				
 			} else if(syncCheck == SYNC_CHECK_ERROR_UNKNOWN) {
 				menuManager->showModal("Failed to Sync Cartridge:", "unknown error", 0, 0, 0);
 				doSync = false;

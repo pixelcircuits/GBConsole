@@ -322,7 +322,7 @@ int CGameManager::syncCartridgeCheck()
 	if(cartCatalogIndex == -1) return SYNC_CHECK_NOT_CATALOGUED;
 	
 	//check if there even is a save
-	if(gbx_getSaveSize() == 0) return SYNC_CHECK_SAVE_UNCHANGED;
+	if(gbx_getSaveSize() == 0) return SYNC_CHECK_SAVE_NONE;
 	
 	//build file names
 	char backupFilename[1024];

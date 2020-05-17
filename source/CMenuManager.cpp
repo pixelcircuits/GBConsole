@@ -1098,9 +1098,6 @@ CSceneNode* CMenuManager::setCarouselIndex(int index, bool updateCursor, bool* n
 }
 void CMenuManager::positionCarousel(int x)
 {
-	int pageSize = carouselCount - (carouselPage*MENU_MAX_CATALOG_CAROUSEL);
-	if(pageSize > MENU_MAX_CATALOG_CAROUSEL) pageSize = MENU_MAX_CATALOG_CAROUSEL;
-	
 	int height = 400;
 	int spacing = 40;
 	if(smallScreen) {
@@ -1113,7 +1110,7 @@ void CMenuManager::positionCarousel(int x)
 	}
 	
 	//carousel next/previous positions
-	carouselNext->setPosition(Vector(x+((height+spacing)*pageSize), vid_getScreenHeight()/2 - height/2));
+	carouselNext->setPosition(Vector(x+((height+spacing)*MENU_MAX_CATALOG_CAROUSEL), vid_getScreenHeight()/2 - height/2));
 	carouselPrevious->setPosition(Vector(x-(height+spacing), vid_getScreenHeight()/2 - height/2));
 }
 void CMenuManager::updateSettings()
