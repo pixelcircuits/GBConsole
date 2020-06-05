@@ -8,7 +8,8 @@
 #define EEPROM_READ 0xC0
 #define EEPROM_WRITE 0x80
 
-#define INV(x)   ((unsigned char)~(x))
+#define _1(x)   (x)
+#define _0(x)   ((unsigned char)~(x))
 
 // Helper functions
 static void gba_eeprom_writeByte(char byte, char includeStop);
@@ -31,7 +32,7 @@ void gba_eeprom_read(char* buffer, unsigned int length)
 		//setup for EEPROM write
 		egpio_setPortDir(EX_GPIO_PORTA, 0x00);
 		egpio_writePort(EX_GPIO_PORTC, 0x80);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS | GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_WR + GBA_CS2) & _0(GBA_CS + GBA_CLK + GBA_PWR));
 		
 		//write the read command to EEPROM
 		if(length > GBA_SAVE_SIZE_4K) {
@@ -43,12 +44,12 @@ void gba_eeprom_read(char* buffer, unsigned int length)
 		
 		//switch back to defaults
 		egpio_writePort(EX_GPIO_PORTC, 0x00);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
 		
 		//setup for EEPROM read
 		egpio_setPortDir(EX_GPIO_PORTA, 0x01);
 		egpio_writePort(EX_GPIO_PORTC, 0x80);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS | GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_WR + GBA_CS2) & _0(GBA_CS + GBA_CLK + GBA_PWR));
 		
 		//clock in the 64 bits of data
 		buffer[index++] = gba_eeprom_readByte(1);
@@ -58,7 +59,7 @@ void gba_eeprom_read(char* buffer, unsigned int length)
 		
 		//back to defaults
 		egpio_writePort(EX_GPIO_PORTC, 0x00);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
 	}
 }
 
@@ -79,7 +80,7 @@ void gba_eeprom_write(char* buffer, unsigned int length)
 		//setup for EEPROM write
 		egpio_setPortDir(EX_GPIO_PORTA, 0x00);
 		egpio_writePort(EX_GPIO_PORTC, 0x80);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS | GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_WR + GBA_CS2) & _0(GBA_CS + GBA_CLK + GBA_PWR));
 		
 		//write the write command to EEPROM
 		if(length > GBA_SAVE_SIZE_4K) {
@@ -97,7 +98,7 @@ void gba_eeprom_write(char* buffer, unsigned int length)
 		
 		//back to defaults
 		egpio_writePort(EX_GPIO_PORTC, 0x00);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
 		
 		//must wait before next write
 		gba_cart_delay(700000); //7ms
@@ -109,13 +110,13 @@ static void gba_eeprom_writeByte(char byte, char includeStop) {
 	int i;
 	for(i=0; i<8; i++) {
 		egpio_writePort(EX_GPIO_PORTA, (byte >> (7-i)) & 0x01);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS | GBA_WR | GBA_PWR));
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS | GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS2) & _0(GBA_CS + GBA_WR + GBA_CLK + GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_WR + GBA_CS2) & _0(GBA_CS + GBA_CLK + GBA_PWR));
 	}
 	if(includeStop) {
 		egpio_writePort(EX_GPIO_PORTA, 0x00);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS | GBA_WR | GBA_PWR));
-		egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS | GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS2) & _0(GBA_CS + GBA_WR + GBA_CLK + GBA_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBA_WR + GBA_CS2) & _0(GBA_CS + GBA_CLK + GBA_PWR));
 	}
 }
 

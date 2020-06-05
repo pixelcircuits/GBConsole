@@ -4,7 +4,8 @@
 #include "egpio.h"
 #include "spi.h"
 
-#define INV(x)   ((unsigned char)~(x))
+#define _1(x)   (x)
+#define _0(x)   ((unsigned char)~(x))
 
 // Read the ROM of a connected GBA cartridge at the given start and length
 void gba_rom_readAt(char* buffer, unsigned int start, unsigned int length)
@@ -18,11 +19,11 @@ void gba_rom_readAt(char* buffer, unsigned int start, unsigned int length)
 	gba_cart_powerUp();
 	
 	//pull GBA_CS low to latch the address
-	egpio_writePortAll(addr0, addr1, addr2, INV(GBA_PWR));
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS | GBA_PWR));
+	egpio_writePortAll(addr0, addr1, addr2, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_WR + GBA_CS2) & _0(GBA_CS + GBA_CLK + GBA_PWR));
 	
 	//set data pins as inputs now
-	egpio_setPortDirAll(0xFF, 0xFF, 0x00, INV(GBA_CS | GBA_WR | GBA_CS2 | GBA_PWR));
+	egpio_setPortDirAB(0xFF, 0xFF);
 
 	//read all ROM data
 	egpio_continuousReadAB_start();
@@ -36,7 +37,7 @@ void gba_rom_readAt(char* buffer, unsigned int start, unsigned int length)
 	egpio_continuousReadAB_end();
 	
 	//pull GBA_CS back to high
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
 	spi_setSelectPin(GBA_SPI_RD, 0x01);
 }
 

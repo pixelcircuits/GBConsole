@@ -5,7 +5,8 @@
 #include "egpio.h"
 #include "spi.h"
 
-#define INV(x)   ((unsigned char)~(x))
+#define _1(x)   (x)
+#define _0(x)   ((unsigned char)~(x))
 
 // Helper functions
 static void gba_flash_writeAtmel(char* buffer, unsigned int length);
@@ -37,7 +38,7 @@ void gba_flash_readAt(char* buffer, unsigned int start, unsigned int length)
 	gba_cart_powerUp();
 	
 	//pull GBA_CS2 pin low while we read data
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS2 | GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR) & _0(GBA_CS2 + GBA_CLK + GBA_PWR));
 	
 	//switch to bank 1 if starting past 512K
 	if(start >= GBA_SAVE_SIZE_512K) {
@@ -76,7 +77,7 @@ void gba_flash_readAt(char* buffer, unsigned int start, unsigned int length)
 	}
 		
 	//pull RD and GBA_CS2 back to high
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
 	spi_setSelectPin(GBA_SPI_RD, 0x01);
 }
 
@@ -97,7 +98,7 @@ void gba_flash_write(char* buffer, unsigned int length)
 	}
 	
 	//pull GBA_CS2, RD and WR back to high
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
 	spi_setSelectPin(GBA_SPI_RD, 0x01);
 }
 
@@ -108,7 +109,7 @@ char gba_flash_checkManufacturer(char* manufacturerId, char* deviceId)
 	gba_cart_powerUp();
 	
 	//pull GBA_CS2 pin low while we write data
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS2 | GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR) & _0(GBA_CS2 + GBA_CLK + GBA_PWR));
 	
 	//write the bus cycles for software id entry
 	gba_flash_writeBus(0x5555, 0xAA);
@@ -137,7 +138,7 @@ char gba_flash_checkManufacturer(char* manufacturerId, char* deviceId)
 	gba_cart_delay(500000); //5ms
 	
 	//pull GBA_CS2 back to high
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
 	spi_setSelectPin(GBA_SPI_RD, 0x01);
 	
 	//return the manufacturer
@@ -154,7 +155,7 @@ static void gba_flash_writeAtmel(char* buffer, unsigned int length) {
 	int i, j;
 	
 	//pull GBA_CS2 pin low while we write data
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS2 | GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR) & _0(GBA_CS2 + GBA_CLK + GBA_PWR));
 	
 	for(i = 0; i < length; i += 128) {
 		
@@ -174,7 +175,7 @@ static void gba_flash_writeOther(char* buffer, unsigned int length) {
 	int i;
 	
 	//pull GBA_CS2 pin low while we write data
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS2 | GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR) & _0(GBA_CS2 + GBA_CLK + GBA_PWR));
 	
 	//cap the num data to read if we need to bank switch later
 	unsigned int numWrites = length;
@@ -247,6 +248,6 @@ static void gba_flash_writeBus(int address, char data) {
 	egpio_writePortAB((char) address, (char) (address >> 8));
 	egpio_writePort(EX_GPIO_PORTC, data);
 		
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS2 | GBA_WR | GBA_PWR));
-	egpio_writePort(EX_GPIO_PORTD, INV(GBA_CS2 | GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS) & _0(GBA_WR + GBA_CS2 + GBA_CLK + GBA_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR) & _0(GBA_CS2 + GBA_CLK + GBA_PWR));
 }

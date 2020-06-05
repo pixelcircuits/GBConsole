@@ -4,7 +4,8 @@
 #include "egpio.h"
 #include "spi.h"
 
-#define INV(x)   ((unsigned char)~(x))
+#define _1(x)   (x)
+#define _0(x)   ((unsigned char)~(x))
 
 // Read the ROM of a connected GB cartridge at the given start and length
 void gbc_rom_readAt(char* buffer, unsigned int start, unsigned int length)
@@ -37,18 +38,18 @@ void gbc_rom_readAt(char* buffer, unsigned int start, unsigned int length)
 		
 		//pulse cs on each read for ram
 		if(start >= GBC_32K) {
-			egpio_writePort(EX_GPIO_PORTD, INV(GBC_CSRAM | GBC_PWR));
+			egpio_writePort(EX_GPIO_PORTD, _1(GBC_WR + GBC_RST) & _0(GBC_CSRAM + GBC_CLK + GBC_PWR));
 			gbc_cart_delay(20);
 		}
 		
 		buffer[i] = egpio_readPort(EX_GPIO_PORTC);
 		
 		//cs high again
-		if(start >= GBC_32K) egpio_writePort(EX_GPIO_PORTD, INV(GBC_PWR));
+		if(start >= GBC_32K) egpio_writePort(EX_GPIO_PORTD, _1(GBC_CSRAM + GBC_WR + GBC_RST) & _0(GBC_CLK + GBC_PWR));
 	}
 	
 	//pull RD and CSRAM back to high
-	egpio_writePort(EX_GPIO_PORTD, INV(GBC_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBC_CSRAM + GBC_WR + GBC_RST) & _0(GBC_CLK + GBC_PWR));
 	spi_setSelectPin(GBC_SPI_RD, 0x01);
 }
 
@@ -76,13 +77,13 @@ void gbc_rom_writeAt(char* buffer, unsigned int start, unsigned int length)
 		egpio_writePort(EX_GPIO_PORTC, buffer[i]);
 		
 		//toggle the WR and CS line
-		egpio_writePort(EX_GPIO_PORTD, INV(GBC_CSRAM | GBC_WR | GBC_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBC_RST) & _0(GBC_CSRAM + GBC_WR + GBC_CLK + GBC_PWR));
 		gbc_cart_delay(20);
-		egpio_writePort(EX_GPIO_PORTD, INV(GBC_PWR));
+		egpio_writePort(EX_GPIO_PORTD, _1(GBC_CSRAM + GBC_WR + GBC_RST) & _0(GBC_CLK + GBC_PWR));
 	}
 	
 	//pull WR and CSRAM back to high
-	egpio_writePort(EX_GPIO_PORTD, INV(GBC_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBC_CSRAM + GBC_WR + GBC_RST) & _0(GBC_CLK + GBC_PWR));
 }
 
 // Writes to ROM for bank switching
@@ -96,10 +97,10 @@ void gbc_rom_writeByte(char byte, unsigned int address)
 	gbc_cart_powerUp();
 	
 	//set data
-	egpio_writePortAll(addr0, addr1, byte, INV(GBC_PWR));
+	egpio_writePortAll(addr0, addr1, byte, _1(GBC_CSRAM + GBC_WR + GBC_RST) & _0(GBC_CLK + GBC_PWR));
 	
 	//pull WR low to write
-	egpio_writePort(EX_GPIO_PORTD, INV(GBC_WR | GBC_PWR));
-	egpio_writePort(EX_GPIO_PORTD, INV(GBC_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBC_CSRAM + GBC_RST) & _0(GBC_WR + GBC_CLK + GBC_PWR));
+	egpio_writePort(EX_GPIO_PORTD, _1(GBC_CSRAM + GBC_WR + GBC_RST) & _0(GBC_CLK + GBC_PWR));
 }
 

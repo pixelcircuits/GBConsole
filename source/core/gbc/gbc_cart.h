@@ -5,6 +5,8 @@
 #define GBC_RD 0x02
 #define GBC_WR 0x04
 #define GBC_RST 0x08
+#define GBC_CLK 0x10
+#define GBC_AUD 0x20
 #define GBC_DTSW 0x40
 #define GBC_PWR 0x80
 #define GBC_SPI_RD 25

@@ -5,6 +5,8 @@
 #define GBA_RD 0x02
 #define GBA_WR 0x04
 #define GBA_CS2 0x08
+#define GBA_CLK 0x10
+#define GBA_IRQ 0x20
 #define GBA_DTSW 0x40
 #define GBA_PWR 0x80
 #define GBA_SPI_RD 25

@@ -78,6 +78,23 @@ void egpio_setPortDirAll(uint8_t dirA, uint8_t dirB, uint8_t dirC, uint8_t dirD)
 	spi_transfer(buffer, 4);
 }
 
+// Sets the direction on port A and B (1=input, 0=output)
+void egpio_setPortDirAB(uint8_t dirA, uint8_t dirB)
+{
+	unsigned char buffer[4];
+	buffer[0] = CHIPA_WRITE; buffer[1] = CHIP_REG_DIR; buffer[2] = dirA; buffer[3] = dirB;
+	spi_transfer(buffer, 4);
+	
+}
+
+// Sets the direction on port C and D (1=input, 0=output)
+void egpio_setPortDirCD(uint8_t dirC, uint8_t dirD)
+{
+	unsigned char buffer[4];
+	buffer[0] = CHIPB_WRITE; buffer[1] = CHIP_REG_DIR; buffer[2] = dirC; buffer[3] = dirD;
+	spi_transfer(buffer, 4);
+}
+
 // Sets the weak pullup on the given ports pins (1=on, 0=off)
 void egpio_setPortPullup(uint8_t port, uint8_t pullup)
 {

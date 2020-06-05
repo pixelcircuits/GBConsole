@@ -19,6 +19,12 @@ void egpio_setPortDir(uint8_t port, uint8_t dir);
 // Sets the direction on all port pins (1=input, 0=output)
 void egpio_setPortDirAll(uint8_t dirA, uint8_t dirB, uint8_t dirC, uint8_t dirD);
 
+// Sets the direction on port A and B (1=input, 0=output)
+void egpio_setPortDirAB(uint8_t dirA, uint8_t dirB);
+
+// Sets the direction on port C and D (1=input, 0=output)
+void egpio_setPortDirCD(uint8_t dirC, uint8_t dirD);
+
 // Sets the weak pullup on the given ports pins (1=on, 0=off)
 void egpio_setPortPullup(uint8_t port, uint8_t pullup);
 
