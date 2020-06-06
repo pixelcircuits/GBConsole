@@ -36,14 +36,14 @@ void gba_sram_readAt(char* buffer, unsigned int start, unsigned int length)
 		egpio_writePortAB((char) address, (char) (address >> 8));
 	
 		//pull RD pin low while we read data
-		spi_setSelectPin(GBA_SPI_RD, 0x00);
+		spi_writeGPIO(GBA_GPIO_RD, 0x00);
 		buffer[i] = egpio_readPort(EX_GPIO_PORTC);
-		spi_setSelectPin(GBA_SPI_RD, 0x01);
+		spi_writeGPIO(GBA_GPIO_RD, 0x01);
 	}
 		
 	//pull RD and GBA_CS2 back to high
 	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
-	spi_setSelectPin(GBA_SPI_RD, 0x01);
+	spi_writeGPIO(GBA_GPIO_RD, 0x01);
 }
 
 // Writes to the SRAM of a connected GBA cartridge
@@ -70,5 +70,5 @@ void gba_sram_write(char* buffer, unsigned int length)
 		
 	//pull WR and GBA_CS2 back to high
 	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
-	spi_setSelectPin(GBA_SPI_RD, 0x01);
+	spi_writeGPIO(GBA_GPIO_RD, 0x01);
 }

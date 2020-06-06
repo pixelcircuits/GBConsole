@@ -1,5 +1,7 @@
 #include "inp.h"
 #include "vkey.h"
+#include "spi.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <unistd.h>
@@ -10,8 +12,11 @@
 #include <linux/input.h>
 
 #define MAX_DEVICES 16
-#define STATE_UPDATE_MILLIS 15000
-#define DEVICE_UPDATE_MILLIS 8
+#define STATE_UPDATE_MILLIS 8
+#define DEVICE_UPDATE_MILLIS 5000
+#define AUTO_FORCE_SHUTDOWN_MILLIS 8000
+
+#define PIN_GPIO_X 3
 
 #define TRACK_KEY_PRESS_Z          0
 #define TRACK_KEY_PRESS_RIGHTSHIFT 1
@@ -45,15 +50,18 @@
 
 // Data
 static char inp_isInitFlag = 0;
+static char inp_autoHotkey = 0;
+static char inp_autoShutdown = 0;
+static int inp_autoShutdownCounter = 0;
 static char inp_deviceSize = 0;
 static int inp_deviceFd[MAX_DEVICES];
 static char* inp_deviceName[MAX_DEVICES];
 static clock_t inp_lastDeviceUpdate = 0;
 static int inp_keyPresses[TRACK_KEY_PRESS_TOTAL];
-static unsigned char inp_buttonStates[10];
+static unsigned char inp_buttonStates[12];
 static char inp_inputType = INP_TYPE_UNKNOWN;
 static int inp_hotkeyCount = 0;
-static pthread_t inp_threadId = -1; 
+static pthread_t inp_threadId = -1;
 
 // Helper Functions
 static void inp_checkButtonInput();
@@ -63,31 +71,47 @@ static void inp_removeDeviceFromList(int index);
 static void inp_updateDeviceList();
 static void inp_clearDeviceList();
 static void inp_automateKeyboardHotkey(int code, int value);
+static void inp_automateForceShutdown();
 
 // State polling thread
 void* inp_thread_statePolling(void* args)
 {
 	while(inp_isInitFlag > 0) {
 		inp_checkButtonInput();
+		if(inp_autoShutdown) inp_automateForceShutdown();
 		
 		//sleep
 		struct timespec ts;
-		ts.tv_sec = DEVICE_UPDATE_MILLIS / 1000;
-		ts.tv_nsec = (DEVICE_UPDATE_MILLIS % 1000) * 1000000;
+		ts.tv_sec = STATE_UPDATE_MILLIS / 1000;
+		ts.tv_nsec = (STATE_UPDATE_MILLIS % 1000) * 1000000;
 		nanosleep(&ts, &ts);
 	}
 	return 0;
 }
 
 // Setup and initialize the Controller interface
-int inp_init()
+int inp_init(char autoHotkey, char autoShutdown)
 {
 	//already initialized?
 	if(inp_isInitFlag == 1) return 0;
 	
+	//check dependencies
+	if(!spi_isInit()) {
+		fprintf(stderr, "inp_init: SPI dependency is not initialized\n");
+		inp_close();
+		return 1;
+	}
+	
+	//setup gpio pins
+	spi_setGPIODir(PIN_GPIO_X, 0x01);
+	spi_setGPIOPud(PIN_GPIO_X, 0x02);
+	
 	//data
 	int i;
+	inp_autoHotkey = autoHotkey;
+	inp_autoShutdown = autoShutdown;
 	for(i=0; i<TRACK_KEY_PRESS_TOTAL; i++) inp_keyPresses[i] = 0;
+	for(i=0; i<12; i++) inp_buttonStates[i] = 0;
 	
 	//initial device search
 	inp_updateDeviceList();
@@ -150,6 +174,11 @@ void inp_updateButtonState()
 	if(inp_keyPresses[TRACK_KEY_PRESS_W] > 0) {
 		if(inp_buttonStates[INP_BTN_R] < 255) inp_buttonStates[INP_BTN_R]++;
 	} else inp_buttonStates[INP_BTN_R] = 0;
+	
+	//gpio buttons
+	if(spi_readGPIO(PIN_GPIO_X) == 0) {
+		if(inp_buttonStates[INP_BTN_X] < 255) inp_buttonStates[INP_BTN_X]++;
+	} else inp_buttonStates[INP_BTN_X] = 0;
 }
 
 // Gets the holding state of the given button
@@ -242,7 +271,7 @@ static void inp_checkButtonInput() {
 						if(evp->value == 1) inp_keyPresses[TRACK_KEY_PRESS_ESC]++;
 						if(inp_keyPresses[TRACK_KEY_PRESS_ESC] < 0) inp_keyPresses[TRACK_KEY_PRESS_ESC] = 0;
 					}
-					inp_automateKeyboardHotkey(evp->code, evp->value);
+					if(inp_autoHotkey) inp_automateKeyboardHotkey(evp->code, evp->value);
 				} else if(evp->type == 3) {
 					//DPad
 					if(evp->code == EIGHTBITDO_BTN_UD) {
@@ -406,5 +435,13 @@ static void inp_automateKeyboardHotkey(int code, int value) {
 				vkey_setKeyState(KEY_HOME, 0);
 			}
 		}
+	}
+}
+static void inp_automateForceShutdown() {
+	if(spi_readGPIO(PIN_GPIO_X) == 0) inp_autoShutdownCounter++;
+	else inp_autoShutdownCounter = 0;
+	
+	if(inp_autoShutdownCounter*STATE_UPDATE_MILLIS > AUTO_FORCE_SHUTDOWN_MILLIS) {
+		system("sudo poweroff -f");
 	}
 }

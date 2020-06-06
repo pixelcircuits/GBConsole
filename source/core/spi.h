@@ -8,14 +8,17 @@ int spi_init(uint32_t clockSpeedHz);
 // Checks if the SPI interface is initialized
 uint8_t spi_isInit();
 
-// Enables the given pin as an additional CS pin
-void spi_enableSelectPin(uint8_t pin);
+// Sets the direction of the given pin (1=input, 0=output)
+void spi_setGPIODir(uint8_t pin, uint8_t dir);
 
-// Sets the state of the given additional CS pin
-void spi_setSelectPin(uint8_t pin, uint8_t on);
+// Sets the weak pullup or pulldown on the given pin (0=off, 1=down, 2=up)
+void spi_setGPIOPud(uint8_t pin, uint8_t pud);
 
-// Disables the given pin as an additional CS pin
-void spi_disableSelectPin(uint8_t pin);
+// Writes the output value of the given pin (1=high, 0=low)
+void spi_writeGPIO(uint8_t pin, uint8_t val);
+
+// Reads the output value of the given pin (1=high, 0=low)
+uint8_t spi_readGPIO(uint8_t pin);
 
 // Locks the SPI interface from use in other threads
 void spi_obtainLock(uint32_t key, uint8_t disableCS);

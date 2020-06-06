@@ -25,6 +25,9 @@
 #define BCM2835_GPIO_FSEL_MASK               0b111  ///< Function select bits mask
 #define BCM2835_GPSET0                       0x001c ///< GPIO Pin Output Set 0
 #define BCM2835_GPCLR0                       0x0028 ///< GPIO Pin Output Clear 0
+#define BCM2835_GPLEV0                       0x0034 ///< GPIO Pin Level 0
+#define BCM2835_GPPUD                        0x0094 ///< GPIO Pin Pull-up/down Enable
+#define BCM2835_GPPUDCLK0                    0x0098 ///< GPIO Pin Pull-up/down Enable Clock 0
 
 /// GPIO function select
 #define BCM2835_GPIO_FSEL_INPT               0b000 ///< Input
@@ -163,16 +166,46 @@ uint8_t spi_isInit()
 	return 0;
 }
 
-// Enables the given pin as an additional CS pin
-void spi_enableSelectPin(uint8_t pin)
+// Sets the direction of the given pin (1=input, 0=output)
+void spi_setGPIODir(uint8_t pin, uint8_t dir)
 {
-	spi_gpio_fsel(pin, BCM2835_GPIO_FSEL_OUTP);
+	if(dir > 0) {
+		spi_gpio_fsel(pin, BCM2835_GPIO_FSEL_INPT);
+	} else {
+		spi_gpio_fsel(pin, BCM2835_GPIO_FSEL_OUTP);
+	}
 }
 
-// Sets the state of the given additional CS pin
-void spi_setSelectPin(uint8_t pin, uint8_t on)
+// Sets the weak pullup or pulldown on the given pin (0=off, 1=down, 2=up)
+void spi_setGPIOPud(uint8_t pin, uint8_t pud)
 {
-    if (on) {
+    volatile uint32_t* paddr;
+	uint8_t shift = pin % 32;
+	if(pud > 2) pud = 0;
+	
+	// Write the pull up/down value
+	paddr = spi_gpio + BCM2835_GPPUD/4;
+	spi_peri_write(paddr, pud);
+    spi_sleep(50);
+	
+	// Clock the pull up/down value
+	paddr = spi_gpio + BCM2835_GPPUDCLK0/4 + pin/32;
+	spi_peri_write(paddr, 1 << shift);
+    spi_sleep(50);
+	
+	// Reset the pull up/down value
+	paddr = spi_gpio + BCM2835_GPPUD/4;
+	spi_peri_write(paddr, 0);
+		
+	// Reset the pull up/down clock
+	paddr = spi_gpio + BCM2835_GPPUDCLK0/4 + pin/32;
+	spi_peri_write(paddr, 0);
+}
+
+// Writes the output value of the given pin (1=high, 0=low)
+void spi_writeGPIO(uint8_t pin, uint8_t val)
+{
+    if(val > 0) {
 		volatile uint32_t* paddr = spi_gpio + BCM2835_GPSET0/4 + pin/32;
 		spi_peri_write(paddr, 1 << pin);
     } else {
@@ -181,10 +214,13 @@ void spi_setSelectPin(uint8_t pin, uint8_t on)
 	}
 }
 
-// Disables the given pin as an additional CS pin
-void spi_disableSelectPin(uint8_t pin)
+// Reads the output value of the given pin (1=high, 0=low)
+uint8_t spi_readGPIO(uint8_t pin)
 {
-	spi_gpio_fsel(pin, BCM2835_GPIO_FSEL_INPT);
+    volatile uint32_t* paddr = spi_gpio + BCM2835_GPLEV0/4 + pin/32;
+    uint8_t shift = pin % 32;
+    uint32_t value = spi_peri_read(paddr);
+    return (value & (1 << shift)) ? 1 : 0;
 }
 
 // Locks the SPI interface from use in other threads

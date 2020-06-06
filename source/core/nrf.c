@@ -29,10 +29,10 @@ int nrf_init()
 	}
 	
 	//setup select pins
-	spi_enableSelectPin(PIN_CE);
-	spi_enableSelectPin(PIN_CSN);
-	spi_setSelectPin(PIN_CE, 0);
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_setGPIODir(PIN_CE, 0x00);
+	spi_setGPIODir(PIN_CSN, 0x00);
+	spi_writeGPIO(PIN_CE, 0);
+	spi_writeGPIO(PIN_CSN, 1);
 	nrf_sleep(50*1000);
 	
 	nrf_isInitFlag = 1;
@@ -48,27 +48,27 @@ char nrf_isInit()
 // Enables the nRF24L01 chip
 void nrf_enable()
 {
-	spi_setSelectPin(PIN_CE, 1);
+	spi_writeGPIO(PIN_CE, 1);
 }
 
 // Disables the nRF24L01 chip
 void nrf_disable()
 {
-	spi_setSelectPin(PIN_CE, 0);
+	spi_writeGPIO(PIN_CE, 0);
 }
 
 // Write one byte into the given register
 void nrf_configRegister(uint8_t reg, uint8_t value) 
 {
 	spi_obtainLock(NRF_SPI_KEY, 1);
-	spi_setSelectPin(PIN_CSN, 0);
+	spi_writeGPIO(PIN_CSN, 0);
 	
 	unsigned char buf[2];
 	buf[0] = W_REGISTER | (REGISTER_MASK & reg);
 	buf[1] = value;
 	spi_transfer(buf, 2);
   
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_writeGPIO(PIN_CSN, 1);
 	spi_unlock(NRF_SPI_KEY);
 }
 
@@ -79,13 +79,13 @@ void nrf_readRegister(uint8_t reg, uint8_t* value, uint8_t len)
 	for(i=0; i<len; i++) value[i] = 0x00;
 		
 	spi_obtainLock(NRF_SPI_KEY, 1);
-	spi_setSelectPin(PIN_CSN, 0);
+	spi_writeGPIO(PIN_CSN, 0);
 	
 	unsigned char buf = R_REGISTER | (REGISTER_MASK & reg);
 	spi_transfer(&buf, 1);
 	spi_transfer(value, len);
   
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_writeGPIO(PIN_CSN, 1);
 	spi_unlock(NRF_SPI_KEY);
 }
 
@@ -93,13 +93,13 @@ void nrf_readRegister(uint8_t reg, uint8_t* value, uint8_t len)
 void nrf_writeRegister(uint8_t reg, uint8_t* value, uint8_t len) 
 {
 	spi_obtainLock(NRF_SPI_KEY, 1);
-	spi_setSelectPin(PIN_CSN, 0);
+	spi_writeGPIO(PIN_CSN, 0);
 	
 	unsigned char buf = W_REGISTER | (REGISTER_MASK & reg);
 	spi_transfer(&buf, 1);
 	spi_transfer(value, len);
   
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_writeGPIO(PIN_CSN, 1);
 	spi_unlock(NRF_SPI_KEY);
 }
 
@@ -109,15 +109,15 @@ void nrf_flushRxTx()
 	unsigned char buf;
 	spi_obtainLock(NRF_SPI_KEY, 1);
 	
-	spi_setSelectPin(PIN_CSN, 0);
+	spi_writeGPIO(PIN_CSN, 0);
 	buf = FLUSH_RX;
 	spi_transfer(&buf, 1);
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_writeGPIO(PIN_CSN, 1);
 	
-	spi_setSelectPin(PIN_CSN, 0);
+	spi_writeGPIO(PIN_CSN, 0);
 	buf = FLUSH_TX;
 	spi_transfer(&buf, 1);
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_writeGPIO(PIN_CSN, 1);
 	
 	spi_unlock(NRF_SPI_KEY);
 }
@@ -126,12 +126,12 @@ void nrf_flushRxTx()
 uint8_t nrf_status()
 {
 	spi_obtainLock(NRF_SPI_KEY, 1);
-	spi_setSelectPin(PIN_CSN, 0);
+	spi_writeGPIO(PIN_CSN, 0);
 
 	unsigned char buf = R_REGISTER | (REGISTER_MASK & STATUS);
 	spi_transfer(&buf, 1);
 
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_writeGPIO(PIN_CSN, 1);
 	spi_unlock(NRF_SPI_KEY);
 
 	return buf;
@@ -144,13 +144,13 @@ void nrf_readRxPayload(uint8_t* value, uint8_t len)
 	for(i=0; i<len; i++) value[i] = 0x00;
 		
 	spi_obtainLock(NRF_SPI_KEY, 1);
-	spi_setSelectPin(PIN_CSN, 0);
+	spi_writeGPIO(PIN_CSN, 0);
 	
 	unsigned char buf = R_RX_PAYLOAD;
 	spi_transfer(&buf, 1);
 	spi_transfer(value, len);
   
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_writeGPIO(PIN_CSN, 1);
 	spi_unlock(NRF_SPI_KEY);
 }
 
@@ -158,13 +158,13 @@ void nrf_readRxPayload(uint8_t* value, uint8_t len)
 void nrf_writeTxPayload(uint8_t* value, uint8_t len)
 {
 	spi_obtainLock(NRF_SPI_KEY, 1);
-	spi_setSelectPin(PIN_CSN, 0);
+	spi_writeGPIO(PIN_CSN, 0);
 	
 	unsigned char buf = W_TX_PAYLOAD;
 	spi_transfer(&buf, 1);
 	spi_transfer(value, len);
   
-	spi_setSelectPin(PIN_CSN, 1);
+	spi_writeGPIO(PIN_CSN, 1);
 	spi_unlock(NRF_SPI_KEY);
 }
 

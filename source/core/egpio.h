@@ -44,7 +44,7 @@ void egpio_writePortAB(uint8_t valA, uint8_t valB);
 void egpio_writePortCD(uint8_t valC, uint8_t valD);
 
 // Reads the values on the given ports pins (1=high, 0=low)
-char egpio_readPort(uint8_t port);
+uint8_t egpio_readPort(uint8_t port);
 
 // Start a continuous read operation on ports A and B
 void egpio_continuousReadAB_start();

@@ -24,8 +24,8 @@ void gbc_rom_readAt(char* buffer, unsigned int start, unsigned int length)
 	gbc_cart_powerUp();
 	egpio_setPortDir(EX_GPIO_PORTC, 0xFF);
 	
-	//pull GBC_SPI_RD pin low while we read data
-	spi_setSelectPin(GBC_SPI_RD, 0x00);
+	//pull GBC_GPIO_RD pin low while we read data
+	spi_writeGPIO(GBC_GPIO_RD, 0x00);
 	
 	//read ROM data
 	for(i = 0; i < length; i++) {
@@ -50,7 +50,7 @@ void gbc_rom_readAt(char* buffer, unsigned int start, unsigned int length)
 	
 	//pull RD and CSRAM back to high
 	egpio_writePort(EX_GPIO_PORTD, _1(GBC_CSRAM + GBC_WR + GBC_RST) & _0(GBC_CLK + GBC_PWR));
-	spi_setSelectPin(GBC_SPI_RD, 0x01);
+	spi_writeGPIO(GBC_GPIO_RD, 0x01);
 }
 
 // Wrties to the RAM of a connected GB cartridge at the given start and length

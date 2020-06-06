@@ -9,7 +9,7 @@
 #define GBA_IRQ 0x20
 #define GBA_DTSW 0x40
 #define GBA_PWR 0x80
-#define GBA_SPI_RD 25
+#define GBA_GPIO_RD 25
 
 // Powers up the cartridge slot to the null state
 void gba_cart_powerUp();

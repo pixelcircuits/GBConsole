@@ -126,17 +126,17 @@ static char gba_eeprom_readByte(char ignoreStart) {
 	char byte = 0x00;
 	if(ignoreStart) {
 		for(i=0; i<4; i++) {
-			spi_setSelectPin(GBA_SPI_RD, 0x00);
+			spi_writeGPIO(GBA_GPIO_RD, 0x00);
 			gba_cart_delay(200); //600ns
-			spi_setSelectPin(GBA_SPI_RD, 0x01);
+			spi_writeGPIO(GBA_GPIO_RD, 0x01);
 			gba_cart_delay(200); //600ns
 		}
 	}
 	for(i=0; i<8; i++) {
-		spi_setSelectPin(GBA_SPI_RD, 0x00);
+		spi_writeGPIO(GBA_GPIO_RD, 0x00);
 		gba_cart_delay(200); //600ns
 		byte |= egpio_readPort(EX_GPIO_PORTA) << (7-i);
-		spi_setSelectPin(GBA_SPI_RD, 0x01);
+		spi_writeGPIO(GBA_GPIO_RD, 0x01);
 		gba_cart_delay(200); //600ns
 	}
 	return byte;

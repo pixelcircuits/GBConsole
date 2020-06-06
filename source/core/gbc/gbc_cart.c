@@ -16,7 +16,7 @@ void gbc_cart_powerUp()
 	//switch on power while setting pins to default state all pins
 	egpio_setPortDirAll(0x00, 0x00, 0x00, _1(GBC_AUD + GBC_DTSW) | _0(GBC_CSRAM + GBC_WR + GBC_RST + GBC_CLK + GBC_PWR)); //default: 1
 	egpio_writePortAll(0x00, 0x00, 0x00, _1(GBC_CSRAM + GBC_WR + GBC_RST) & _0(GBC_CLK + GBC_PWR)); //default: 0
-	spi_setSelectPin(GBC_SPI_RD, 0x01);
+	spi_writeGPIO(GBC_GPIO_RD, 0x01);
 	
 	//wait for things to power up
 	if(gbc_power == 0) {
@@ -31,16 +31,16 @@ void gbc_cart_powerDown()
 	//disconnect pins
 	egpio_setPortPullupAll(0x00, 0x00, 0x00, GBC_DTSW);
 	egpio_setPortDirAll(0xFF, 0xFF, 0xFF, _1(GBC_CSRAM + GBC_WR + GBC_RST + GBC_CLK + GBC_AUD + GBC_DTSW) | _0(GBC_PWR)); //default: 1
-	spi_disableSelectPin(GBC_SPI_RD);
+	spi_setGPIODir(GBC_GPIO_RD, 0x01);
 	
 	//switch off power
 	egpio_writePort(EX_GPIO_PORTD, _1(GBC_PWR));
 	
 	//gnd all pins
 	egpio_writePortAll(0x00, 0x00, 0x00, _1(GBC_PWR) & _0(GBC_CSRAM + GBC_WR + GBC_RST + GBC_CLK)); //default: 0
-	spi_setSelectPin(GBC_SPI_RD, 0x00);
+	spi_writeGPIO(GBC_GPIO_RD, 0x00);
 	egpio_setPortDirAll(0x00, 0x00, 0x00, _1(GBC_AUD + GBC_DTSW) | _0(GBC_CSRAM + GBC_WR + GBC_RST + GBC_CLK + GBC_PWR)); //default: 1
-	spi_enableSelectPin(GBC_SPI_RD);
+	spi_setGPIODir(GBC_GPIO_RD, 0x00);
 	gbc_power = 0;
 }
 

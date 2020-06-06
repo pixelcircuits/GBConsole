@@ -511,7 +511,7 @@ int CMenuManager::showModal(const char* text1, const char* text2, const char** b
 			}
 			
 			//exit?
-			if(inp_getButtonState(INP_BTN_A) == 1) break;
+			if(inp_getButtonState(INP_BTN_A) == 1 || inp_getButtonState(INP_BTN_X) == 1) break;
 			
 			//cursorTarget
 			this->render();

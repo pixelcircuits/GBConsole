@@ -61,9 +61,9 @@ void gba_flash_readAt(char* buffer, unsigned int start, unsigned int length)
 		egpio_writePortAB((char) address, (char) (address >> 8));
 	
 		//pull RD pin low while we read data
-		spi_setSelectPin(GBA_SPI_RD, 0x00);
+		spi_writeGPIO(GBA_GPIO_RD, 0x00);
 		buffer[i] = egpio_readPort(EX_GPIO_PORTC);
-		spi_setSelectPin(GBA_SPI_RD, 0x01);
+		spi_writeGPIO(GBA_GPIO_RD, 0x01);
 	}
 		
 	//switch back to bank 0 if starting past 512K
@@ -78,7 +78,7 @@ void gba_flash_readAt(char* buffer, unsigned int start, unsigned int length)
 		
 	//pull RD and GBA_CS2 back to high
 	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
-	spi_setSelectPin(GBA_SPI_RD, 0x01);
+	spi_writeGPIO(GBA_GPIO_RD, 0x01);
 }
 
 // Writes to the Flash memory of a connected GBA cartridge
@@ -99,7 +99,7 @@ void gba_flash_write(char* buffer, unsigned int length)
 	
 	//pull GBA_CS2, RD and WR back to high
 	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
-	spi_setSelectPin(GBA_SPI_RD, 0x01);
+	spi_writeGPIO(GBA_GPIO_RD, 0x01);
 }
 
 // Reads the manufacturer code of the flash chip
@@ -120,15 +120,15 @@ char gba_flash_checkManufacturer(char* manufacturerId, char* deviceId)
 	//read manufacturer id
 	egpio_setPortDir(EX_GPIO_PORTC, 0xFF);
 	egpio_writePortAB(0x00, 0x00);
-	spi_setSelectPin(GBA_SPI_RD, 0x00);
+	spi_writeGPIO(GBA_GPIO_RD, 0x00);
 	manufacturerId[0] = egpio_readPort(EX_GPIO_PORTC);
-	spi_setSelectPin(GBA_SPI_RD, 0x01);
+	spi_writeGPIO(GBA_GPIO_RD, 0x01);
 		
 	//read device id
 	egpio_writePortAB(0x01, 0x00);
-	spi_setSelectPin(GBA_SPI_RD, 0x00);
+	spi_writeGPIO(GBA_GPIO_RD, 0x00);
 	deviceId[0] = egpio_readPort(EX_GPIO_PORTC);
-	spi_setSelectPin(GBA_SPI_RD, 0x01);
+	spi_writeGPIO(GBA_GPIO_RD, 0x01);
 	
 	//write the bus cycles for software id exit
 	egpio_setPortDir(EX_GPIO_PORTC, 0x00);
@@ -139,7 +139,7 @@ char gba_flash_checkManufacturer(char* manufacturerId, char* deviceId)
 	
 	//pull GBA_CS2 back to high
 	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
-	spi_setSelectPin(GBA_SPI_RD, 0x01);
+	spi_writeGPIO(GBA_GPIO_RD, 0x01);
 	
 	//return the manufacturer
 	if(manufacturerId[0] == 0x1F) return GBA_FLASH_MANUFACTURER_ATMEL;

@@ -30,15 +30,15 @@ void gba_rom_readAt(char* buffer, unsigned int start, unsigned int length)
 	for(i = 0; i < length; i += 2) {
 		
 		//pull RD pin low while we read data
-		spi_setSelectPin(GBA_SPI_RD, 0x00);
+		spi_writeGPIO(GBA_GPIO_RD, 0x00);
 		egpio_continuousReadAB_cont(buffer+i);
-		spi_setSelectPin(GBA_SPI_RD, 0x01);
+		spi_writeGPIO(GBA_GPIO_RD, 0x01);
 	}
 	egpio_continuousReadAB_end();
 	
 	//pull GBA_CS back to high
 	egpio_writePort(EX_GPIO_PORTD, _1(GBA_CS + GBA_WR + GBA_CS2) & _0(GBA_CLK + GBA_PWR));
-	spi_setSelectPin(GBA_SPI_RD, 0x01);
+	spi_writeGPIO(GBA_GPIO_RD, 0x01);
 }
 
 // Try to figure out the connected GBA cartridge ROM size

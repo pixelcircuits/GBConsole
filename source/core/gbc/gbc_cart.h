@@ -9,7 +9,7 @@
 #define GBC_AUD 0x20
 #define GBC_DTSW 0x40
 #define GBC_PWR 0x80
-#define GBC_SPI_RD 25
+#define GBC_GPIO_RD 25
 
 // Powers up the cartridge slot to the null state
 void gbc_cart_powerUp();

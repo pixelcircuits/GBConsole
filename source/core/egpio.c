@@ -154,7 +154,7 @@ void egpio_writePortCD(uint8_t valC, uint8_t valD)
 }
 
 // Reads the values on the given ports pins (1=high, 0=low)
-char egpio_readPort(uint8_t port)
+uint8_t egpio_readPort(uint8_t port)
 {
 	unsigned char chip = CHIPA_READ;
 	if(port == EX_GPIO_PORTC || port == EX_GPIO_PORTD) chip = CHIPB_READ;
