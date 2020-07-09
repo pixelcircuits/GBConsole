@@ -592,18 +592,18 @@ void CGameManager::playGame(int index)
 				if(gm_fileExists(biosFile)) {
 					
 					//prefer lr-gpsp if bios file
-					for(int i=1; i<numEmulatorsGB; i++) {
-						if(strcmp(availableEmulatorsGB[i], "lr-gpsp")==0) {
-							for(int j=0; gm_emulatorsGB[j]; j++) if(strcmp(gm_emulatorsGB[j], "lr-gpsp")==0) { emulator = j; break; }
+					for(int i=1; i<numEmulatorsGBA; i++) {
+						if(strcmp(availableEmulatorsGBA[i], "lr-gpsp")==0) {
+							for(int j=0; gm_emulatorsGBA[j]; j++) if(strcmp(gm_emulatorsGBA[j], "lr-gpsp")==0) { emulator = j; break; }
 							break;
 						}
 					}
 				} else {
 					
 					//prefer lr-mgba if no bios file
-					for(int i=1; i<numEmulatorsGB; i++) {
-						if(strcmp(availableEmulatorsGB[i], "lr-mgba")==0) {
-							for(int j=0; gm_emulatorsGB[j]; j++) if(strcmp(gm_emulatorsGB[j], "lr-mgba")==0) { emulator = j; break; }
+					for(int i=1; i<numEmulatorsGBA; i++) {
+						if(strcmp(availableEmulatorsGBA[i], "lr-mgba")==0) {
+							for(int j=0; gm_emulatorsGBA[j]; j++) if(strcmp(gm_emulatorsGBA[j], "lr-mgba")==0) { emulator = j; break; }
 							break;
 						}
 					}
