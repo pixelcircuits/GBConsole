@@ -34,6 +34,9 @@ void core_close();
 //program entry
 int main(int argc, char** argv)
 {
+	//check for program skip flag
+	if(remove(".skip") == 0) return 0;
+	
 	//init core modules
 	if(vid_init() || bt_init() || usb_init() || spi_init(SPI_CLK_SPEED) || egpio_init() || nrf_init() || vkey_init() || wgc_init() || inp_init(1,1) || gbx_init()) {
 		printf("Init failed. Are you running as root??\n");
