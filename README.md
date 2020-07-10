@@ -3,6 +3,9 @@ The GameBoy Console is an emulator that plays physical GameBoy, GameBoy Color an
 
 <img src="https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/guide/img/gbconsole_img2.jpg" width="400" hspace="4"/><img src="https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/guide/img/gbconsole_dev2.jpg" width="400" hspace="4"/><img src="https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/guide/img/screen_cartridge.png" width="400" hspace="4"/><img src="https://raw.githubusercontent.com/pixelcircuits/GBConsole_Documentation/master/guide/img/screen_catalog.png" width="400" hspace="4"/>
 
+## Built Image
+If you wish to skip the manual installation process, you can use an already built [GBConsole(v1.1)](http://www.mediafire.com/file/1nio26ro8n0pnzi/GBConsole%2528v1_1%2529.zip/file) image. Refer to [this tutorial](https://www.raspberrypi.org/documentation/installation/installing-images/README.md) for how to install OS images on an SD card. Otherwise, continue with the following instructions to build from scratch.
+
 ## Software Setup
 Please follow these steps to install and setup the GameBoy Console on a Raspberry Pi Zero or Raspberry Pi Zero W (other Raspberry Pi versions not yet supported). You will need the appropriate hardware connected to the GPIO of the Raspberry Pi in order to read cartridges. Refer to the additional documentation [here](https://github.com/pixelcircuits/GBConsole_Documentation) for information on setting up the hardware.
 
