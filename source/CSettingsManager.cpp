@@ -112,7 +112,10 @@ signed int CSettingsManager::getPropertyInteger(const char* property, signed int
 {
 	if(fileData.size() > 0) {
 		char val[32];
-		getPropertyString(property, "unknown", val, 32);
+		getPropertyString(property, "null", val, 32);
+		
+		//check if null
+		if(strcmp(val, "null")==0) return defVal;
 
 		//get leading sign
 		int start = 0;
@@ -122,7 +125,8 @@ signed int CSettingsManager::getPropertyInteger(const char* property, signed int
 
 		//check if valid integer
 		for(int i=start; i<32; i++) {
-			if(val[i] != 0 && (val[i] < 48 || val[i] > 57)) return defVal;
+			if(val[i]==0) break;
+			if(val[i] < 48 || val[i] > 57) return defVal;
 		}
 
 		//get integer
