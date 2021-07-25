@@ -8685,7 +8685,8 @@
     "crc": "7A01E45A",
     "sha1": "42F3714EEC6ECA25200D42461FF08D57C98F6D1D",
     "sgb_enhanced": true,
-    "cgb_enhanced": true
+    "cgb_enhanced": true,
+    "sha1_1k": "C7020C40424D4B1FB79C952AE4F3D6F11DC6E45E"
   },
   {
     "name": "Pokemon - Red Version",
