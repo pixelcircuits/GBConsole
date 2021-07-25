@@ -7707,7 +7707,8 @@
     "crc": "4889DFAA",
     "sha1": "9254195D461EA942EAAA08CC4B83DE3CF82AEA0D",
     "gb_compatible": true,
-    "sgb_enhanced": true
+    "sgb_enhanced": true,
+    "sha1_1k": "2B3C9CCA0A4308564EB1A1D1793AE021B5F8790B"
   },
   {
     "name": "Pokemon - Kristall-Edition",
